@@ -26,7 +26,6 @@ public class Magazin extends javax.swing.JFrame {
         jLabel6.setVisible(false);
         jLabel7.setVisible(false);
         jPanel7.setVisible(false);
-        jPanel8.setVisible(false);
         
         homescreen home = new homescreen();
         jpload.jPanelLoader(jPanel5, home);
@@ -42,7 +41,6 @@ public class Magazin extends javax.swing.JFrame {
                 jPanel18.setBackground(new Color(255,255,255));
                 jPanel18.setVisible(true);
                 jLabel7.setVisible(true);
-                jPanel8.setVisible(true);
                 
                 break;
             case "2":
@@ -52,7 +50,6 @@ public class Magazin extends javax.swing.JFrame {
                 jPanel18.setVisible(true);
                 jPanel17.setVisible(true);
                 jLabel7.setVisible(true);
-                jPanel8.setVisible(true);
                 jLabel6.setVisible(true);
                 break;
             default:
@@ -66,7 +63,6 @@ public class Magazin extends javax.swing.JFrame {
             jLabel5.setVisible(false);
             jLabel17.setVisible(true);
             jPanel7.setVisible(true);
-            jPanel8.setVisible(true);
         }
     
     
