@@ -12,11 +12,13 @@ import java.awt.Color;
  */
 public class Magazin extends javax.swing.JFrame {
 
+    private int userID;
+    private String username;
     JpanelLoader jpload = new JpanelLoader();
     /**
      * Creates new form Magazin
      */
-    public Magazin() {
+    public Magazin() {;
         initComponents();
         //jPanel17.setBackground(new Color(153,153,153));
         //jPanel18.setBackground(new Color(153,153,153));
@@ -32,8 +34,10 @@ public class Magazin extends javax.swing.JFrame {
         home.setVisible(true);
     }
 
-    public Magazin(String user, String acc_lvl, int login_state) {
+    public Magazin(int uid,String user, String acc_lvl, int login_state) {
         this();
+        userID = uid;
+        username = user;
         String userEmployment;
         switch (acc_lvl) {
             case "1":
@@ -191,6 +195,12 @@ public class Magazin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
 
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel6MouseClicked(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Home");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -216,6 +226,12 @@ public class Magazin extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel16MouseClicked(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Magazin");
@@ -324,16 +340,22 @@ public class Magazin extends javax.swing.JFrame {
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
-        jLabel8.setText("Cos de cumparaturi");
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel7MouseClicked(evt);
+            }
+        });
+
+        jLabel8.setText("Contul meu");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel8)
-                .addGap(27, 27, 27))
+                .addGap(48, 48, 48))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -485,6 +507,24 @@ public class Magazin extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_jPanel17MouseClicked
+
+    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+        account ac = new account(userID);
+        jpload.jPanelLoader(jPanel5, ac);
+        ac.setVisible(true);
+    }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        homescreen home = new homescreen();
+        jpload.jPanelLoader(jPanel5, home);
+        home.setVisible(true);
+    }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void jPanel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel16MouseClicked
+        shop sh = new shop();
+        jpload.jPanelLoader(jPanel5, sh);
+        sh.setVisible(true);
+    }//GEN-LAST:event_jPanel16MouseClicked
 
     /**
      * @param args the command line arguments

@@ -19,7 +19,7 @@ public class db {
         try {
             
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://db4free.net:3306/revitdb","revitdb", "revitdb1337");
+            con = DriverManager.getConnection("jdbc:mysql://mysql-105349-0.cloudclusters.net:17481/revitdb","admin", "Ea3b7ArW");
             return con;
         } catch (ClassNotFoundException | SQLException e) { 
             System.out.println(e);

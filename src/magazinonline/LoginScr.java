@@ -209,7 +209,7 @@ public class LoginScr extends javax.swing.JFrame {
             if (rs.next()){
                 if (rs.getString("user_pass").equals(pw)){
                     login_state = 1;
-                    new Magazin(user,rs.getString("user_lvl"), login_state).setVisible(true);
+                    new Magazin(rs.getInt("user_id"),user,rs.getString("user_lvl"), login_state).setVisible(true);
                     dispose();
                 }
             }

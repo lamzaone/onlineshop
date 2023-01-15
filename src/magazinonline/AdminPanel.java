@@ -59,7 +59,7 @@ public class AdminPanel extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
 
-        jPanel2.setBackground(new java.awt.Color(255, 51, 102));
+        jPanel2.setBackground(new java.awt.Color(153, 0, 153));
 
         jLabel2.setText("Username:");
 
@@ -172,7 +172,7 @@ public class AdminPanel extends javax.swing.JFrame {
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setText("Search by username:");
+        jLabel1.setText("Search by userID:");
 
         srchButton.setText("SEARCH");
         srchButton.addActionListener(new java.awt.event.ActionListener() {
