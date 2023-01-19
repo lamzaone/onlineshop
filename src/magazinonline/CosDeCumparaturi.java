@@ -11,13 +11,16 @@ import java.io.Serializable;
  * @author denis
  */
 public class CosDeCumparaturi implements Serializable {
-    String Nume;
+    private static final long serialVersionUID = 1L;
+    
     int id;
+    String Nume;
     double pret;
     int qty;
     double totalpret;
 
-    public CosDeCumparaturi(String Nume, double pret, int qty, double totalpret) {
+    public CosDeCumparaturi(int id, String Nume, double pret, int qty, double totalpret) {
+        this.id = id;
         this.Nume = Nume;
         this.pret = pret;
         this.qty = qty;

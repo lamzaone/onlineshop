@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class shop extends javax.swing.JPanel {
     List<CosDeCumparaturi> cos;
+    int userid;
     /**
      * Creates new form shop
      */
@@ -36,16 +37,17 @@ public class shop extends javax.swing.JPanel {
         table_load();
         category_load();
         
-//        jSpinner1.setVisible(false);
-//        jButton1.setVisible(false);
-//        jLabel6.setVisible(false);
-//        jLabel8.setVisible(false);
+        jSpinner1.setVisible(false);
+        jButton1.setVisible(false);
+        jLabel6.setVisible(false);
+        jLabel8.setVisible(false);
     }
     
     ImageIcon format;
 
-    shop(int acclv) {
+    shop(int acclv, int userID) {
         this();
+        userid = userID;
         if (acclv>=0){
             jSpinner1.setVisible(true);
             jButton1.setVisible(true);
@@ -449,15 +451,21 @@ public class shop extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int r = jTable1.getSelectedRow();
-        String cacat = jTable1.getValueAt(r, 2).toString();
         
-        double double1 = Double.parseDouble(jTable1.getValueAt(r, 3).toString());
+        int pid = Integer.parseInt(jTable1.getValueAt(r, 0).toString());
         
-        int cechet = Integer.parseInt(jSpinner1.getValue().toString());
-        double double2 = double1* Double.parseDouble(String.valueOf(cechet));
+        int qty = Integer.parseInt(jSpinner1.getValue().toString());
+//        double double2 = double1* Double.parseDouble(String.valueOf(cechet));
+//        cos.add(new CosDeCumparaturi(cacat, double1, cechet, double2));
         
-        cos.add(new CosDeCumparaturi(cacat, double1, cechet, double2));
-        
+        try {
+             Statement s = (Statement) db.mycon().createStatement();
+             s.executeUpdate(" INSERT INTO cos_cumparaturi (id, id_user, id_produs, cantitate) VALUES (DEFAULT,'"+userid+"', '"+pid+"', '"+qty+"')");
+            
+        }
+        catch (Exception e) {
+            
+        }
     
         for (CosDeCumparaturi cos1 : cos){
             System.out.println(cos1.toString());
