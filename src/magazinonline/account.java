@@ -76,7 +76,7 @@ public class account extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(jLabel1)
-                .addContainerGap(684, Short.MAX_VALUE))
+                .addContainerGap(712, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,7 +125,7 @@ public class account extends javax.swing.JPanel {
                 .addComponent(labeladresa)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labeltelefon)
-                .addGap(0, 360, Short.MAX_VALUE))
+                .addGap(0, 356, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
