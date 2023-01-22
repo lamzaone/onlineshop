@@ -11,10 +11,11 @@ import java.util.List;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -26,29 +27,35 @@ import javax.swing.table.DefaultTableModel;
 public class shop extends javax.swing.JPanel {
     List<CosDeCumparaturi> cos;
     int userid;
+    int loginstate = 0;
+    Connection conn = null;
+    ImageIcon format;
     /**
      * Creates new form shop
      */
     public shop() {
         
         
-        cos = new ArrayList<>();
         initComponents();
-        table_load();
-        category_load();
-        
         jSpinner1.setVisible(false);
         jButton1.setVisible(false);
         jLabel6.setVisible(false);
         jLabel8.setVisible(false);
+        
+        cos = new ArrayList<>();
+        table_load();
+        category_load();
+
     }
     
-    ImageIcon format;
 
-    shop(int acclv, int userID) {
+    shop(int acclv, int userID, int login_state) {
         this();
         userid = userID;
-        if (acclv>=0){
+        System.out.println (userid);
+        loginstate = login_state;
+        System.out.println (loginstate);
+        if (login_state > 0){
             jSpinner1.setVisible(true);
             jButton1.setVisible(true);
             jLabel6.setVisible(true);
@@ -57,17 +64,25 @@ public class shop extends javax.swing.JPanel {
     }
     
     public void category_load(){
-        
-        jComboBox2.removeAllItems();
-        jComboBox2.addItem("ALL");
+
         try {
-            Statement s = db.mycon().createStatement();
+            
+
+//            conn = DriverManager.getConnection("jdbc:mysql://mysql-105349-0.cloudclusters.net:17481/revitdb","admin", "Ea3b7ArW");
+//            Statement s = conn.createStatement();
+
+            Statement s  = db.mycon().createStatement();
+
             ResultSet rs = s.executeQuery("SELECT DISTINCT product_category FROM Products");
+            
+
             while(rs.next()){
                 jComboBox2.addItem(rs.getString("product_category"));
             }
+            
+            s.close();
         }
-        catch (Exception e){
+        catch (SQLException e){
             
         }
     }
@@ -78,6 +93,7 @@ public class shop extends javax.swing.JPanel {
             dt.setRowCount(0);
             Statement s  = db.mycon().createStatement();
             ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM Products");
+
             
             while(rs.next()){
                 Vector v = new Vector();
@@ -87,8 +103,11 @@ public class shop extends javax.swing.JPanel {
                 v.add(rs.getDouble(4));
                 
                 dt.addRow(v);
+            }
             
-        }
+
+            
+            s.close();
             
         }
         catch (Exception e){
@@ -143,7 +162,7 @@ public class shop extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
         jLabel1.setText("CATEGORY:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ITEM", "ITEM", "ITEM" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ALL" }));
         jComboBox2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox2ItemStateChanged(evt);
@@ -390,6 +409,8 @@ public class shop extends javax.swing.JPanel {
                 jLabel8.setText(q);
             }
             
+            s.close();
+            
             
         }
         catch(Exception e){
@@ -417,8 +438,10 @@ public class shop extends javax.swing.JPanel {
                     dt.addRow(v);
 
             }
-
+                
+            s.close();
             }
+            
 
             catch (Exception e){
 
@@ -441,6 +464,7 @@ public class shop extends javax.swing.JPanel {
 
             }
 
+            s.close();
             }
 
             catch (Exception e){

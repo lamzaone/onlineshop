@@ -11,8 +11,8 @@ import java.sql.ResultSet;
  * @author denis
  */
 public class LoginScr extends javax.swing.JFrame {
-    String user = "";
-    String pw = "";
+    String user;
+    String pw;
     
     /**
      * Creates new form LoginScr
@@ -200,7 +200,6 @@ public class LoginScr extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         user = userField.getText();
         pw = pwField.getText();
-        int login_state = 0;
         try{
             Statement s = (Statement) db.mycon().createStatement();
             
@@ -208,11 +207,11 @@ public class LoginScr extends javax.swing.JFrame {
             
             if (rs.next()){
                 if (rs.getString("user_pass").equals(pw)){
-                    login_state = 1;
-                    new Magazin(rs.getInt("user_id"),user,rs.getString("user_lvl"), login_state).setVisible(true);
+                    new Magazin(rs.getInt("user_id"),user,rs.getString("user_lvl"), 1).setVisible(true);
                     dispose();
                 }
             }
+            s.close();
             
         } catch (Exception e){
             System.out.println(e);

@@ -13,6 +13,7 @@ import java.awt.Color;
 public class Magazin extends javax.swing.JFrame {
 
     private int userID;
+    private int loginstate = 0;
     private int acclv=-1;
     JpanelLoader jpload = new JpanelLoader();
     /**
@@ -40,6 +41,7 @@ public class Magazin extends javax.swing.JFrame {
         this();
         userID = uid;
         acclv = Integer.parseInt(acc_lvl);
+        loginstate = login_state;
         String userEmployment;
         switch (acc_lvl) {
             case "1":
@@ -600,7 +602,7 @@ public class Magazin extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel6MouseClicked
 
     private void jPanel16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel16MouseClicked
-        shop sh = new shop(acclv,userID);
+        shop sh = new shop(acclv,userID,loginstate);
         jpload.jPanelLoader(jPanel5, sh);
         sh.setVisible(true);
     }//GEN-LAST:event_jPanel16MouseClicked

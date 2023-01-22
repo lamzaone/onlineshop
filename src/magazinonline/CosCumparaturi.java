@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class CosCumparaturi extends javax.swing.JPanel {
     List<CosDeCumparaturi> cos;
     int cod = 0;
+    int uid;
     private static final DecimalFormat df = new DecimalFormat("0.00");
     /**
      * Creates new form CosCumparaturi
@@ -34,6 +35,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
         
         this();
         table_load(userID);
+        uid = userID;
         }
     public void table_load(int userID){
         try {
@@ -243,7 +245,14 @@ public class CosCumparaturi extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        try {
+            Statement s = db.mycon().createStatement();
+            s.executeUpdate("DELETE FROM `cos_cumparaturi` WHERE `id_user` ='"+uid+"'");
+
+        } catch (Exception e){
+            
+        }
+        table_load(uid);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
