@@ -42,7 +42,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
             
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = db.mycon().createStatement();
+            Statement s  = dbcp.poolCon().createStatement();
             ResultSet rs = s.executeQuery("SELECT Products.product_id,Products.product_category,Products.product_name,Products.product_price, Products.product_description, cos_cumparaturi.cantitate FROM Products JOIN cos_cumparaturi ON Products.product_id = cos_cumparaturi.id_produs WHERE cos_cumparaturi.id_user = '"+userID+"'");
             
             while(rs.next()){
@@ -60,6 +60,8 @@ public class CosCumparaturi extends javax.swing.JPanel {
                 cos.add(new CosDeCumparaturi(rs.getInt(1), rs.getString(3),rs.getDouble(4), w, q*w));
             
         }
+            rs.close();
+            s.close();
             double q=0;
             for (int i=0; i<dt.getRowCount();i++){
                 q += Double.parseDouble(dt.getValueAt(i, 5).toString());
@@ -73,6 +75,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
         catch (Exception e){
             System.out.println(e);
         }
+        
     }
     
     /**
@@ -248,7 +251,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
         try {
             Statement s = db.mycon().createStatement();
             s.executeUpdate("DELETE FROM `cos_cumparaturi` WHERE `id_user` ='"+uid+"'");
-
+            s.close();
         } catch (Exception e){
             
         }
@@ -261,7 +264,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
     try {
-        Statement s  = db.mycon().createStatement();
+        Statement s  = dbcp.poolCon().createStatement();
         ResultSet rs = s.executeQuery("SELECT value FROM promo_codes WHERE code = '"+jTextField1.getText()+"'");
         
         if (rs.next() && cod<1){
@@ -273,6 +276,8 @@ public class CosCumparaturi extends javax.swing.JPanel {
             jLabel5.setText("COD PROMOTIONAL APLICAT! PRET REDUS CU "+df.format(l*(m/100))+"RON");
             JOptionPane.showMessageDialog(null, "CODUL A FOST APLICAT CU SUCCES! REDUCERE "+m+"%!", "", JOptionPane.INFORMATION_MESSAGE);
             cod++;
+            s.close();
+            rs.close();
         }
         else {
             

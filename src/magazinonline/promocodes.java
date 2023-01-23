@@ -28,7 +28,7 @@ public class promocodes extends javax.swing.JPanel {
         try {
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = db.mycon().createStatement();
+            Statement s  = dbcp.poolCon().createStatement();
             ResultSet rs = s.executeQuery("SELECT id, code, value FROM promo_codes");
             
             while(rs.next()){
@@ -40,6 +40,9 @@ public class promocodes extends javax.swing.JPanel {
                 dt.addRow(v);
             
         }
+            
+            s.close();
+            rs.close();
             
         }
         catch (Exception e){
@@ -210,6 +213,8 @@ public class promocodes extends javax.swing.JPanel {
             Statement s = (Statement) db.mycon().createStatement();
             s.executeUpdate("INSERT INTO promo_codes (id,code,value) VALUES (default,'"+jTextField2.getText()+"','"+jTextField3.getText()+"')");
             table_load();
+            
+            s.close();
         }
         catch (Exception e){
             
@@ -221,7 +226,9 @@ public class promocodes extends javax.swing.JPanel {
         try {
             Statement s = (Statement) db.mycon().createStatement();
             s.executeUpdate(" UPDATE promo_codes SET code='"+jTextField2.getText()+"', value='"+jTextField3.getText()+"' WHERE id ='"+jTextField1.getText()+"'");
+            s.close();
             table_load();
+            
         } catch (Exception e){
             
         }
@@ -232,7 +239,11 @@ public class promocodes extends javax.swing.JPanel {
         try {
             Statement s = (Statement) db.mycon().createStatement();
             s.executeUpdate(" DELETE FROM promo_codes WHERE id='"+q+"'");
+            
+            s.close();
             table_load();
+            
+            
         } catch (Exception e){
             
         }
@@ -242,7 +253,7 @@ public class promocodes extends javax.swing.JPanel {
     int r = jTable1.getSelectedRow();
     
     try {
-        Statement s  = db.mycon().createStatement();
+        Statement s  = dbcp.poolCon().createStatement();
         ResultSet rs = s.executeQuery("SELECT * FROM promo_codes where id = '"+jTable1.getValueAt(r, 0)+"'");
         
         if (rs.next()){
@@ -250,6 +261,8 @@ public class promocodes extends javax.swing.JPanel {
             jTextField2.setText(rs.getString(2));
             jTextField3.setText(rs.getString(3));
         }
+            s.close();
+            rs.close();
     }
     catch (Exception e){
         

@@ -5,6 +5,7 @@
 package magazinonline;
 
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.awt.Image;
 import static java.awt.Image.SCALE_SMOOTH;
 import java.util.List;
@@ -20,12 +21,27 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
+import javax.sql.DataSource;
+
 /**
  *
  * @author denis
  */
 public class shop extends javax.swing.JPanel {
-    List<CosDeCumparaturi> cos;
+//    static ComboPooledDataSource comboPooledDataSource = null;
+//
+//	static {
+//		comboPooledDataSource = new ComboPooledDataSource();
+//
+//		comboPooledDataSource.setJdbcUrl("jdbc:mysql://mysql-105349-0.cloudclusters.net:17481/revitdb");
+//		comboPooledDataSource.setUser("admin");
+//		comboPooledDataSource.setPassword("Ea3b7ArW");
+//
+//		comboPooledDataSource.setMinPoolSize(3);
+//		comboPooledDataSource.setAcquireIncrement(3);
+//		comboPooledDataSource.setMaxPoolSize(30);
+//
+//	}
     int userid;
     int loginstate = 0;
     Connection conn = null;
@@ -42,7 +58,6 @@ public class shop extends javax.swing.JPanel {
         jLabel6.setVisible(false);
         jLabel8.setVisible(false);
         
-        cos = new ArrayList<>();
         table_load();
         category_load();
 
@@ -52,15 +67,14 @@ public class shop extends javax.swing.JPanel {
     shop(int acclv, int userID, int login_state) {
         this();
         userid = userID;
-        System.out.println (userid);
         loginstate = login_state;
-        System.out.println (loginstate);
         if (login_state > 0){
             jSpinner1.setVisible(true);
             jButton1.setVisible(true);
             jLabel6.setVisible(true);
             jLabel8.setVisible(true);
         }
+        
     }
     
     public void category_load(){
@@ -71,7 +85,10 @@ public class shop extends javax.swing.JPanel {
 //            conn = DriverManager.getConnection("jdbc:mysql://mysql-105349-0.cloudclusters.net:17481/revitdb","admin", "Ea3b7ArW");
 //            Statement s = conn.createStatement();
 
-            Statement s  = db.mycon().createStatement();
+//            conn = comboPooledDataSource.getConnection();
+//            Statement s  = conn.createStatement();
+            
+            Statement s  = dbcp.poolCon().createStatement();
 
             ResultSet rs = s.executeQuery("SELECT DISTINCT product_category FROM Products");
             
@@ -81,6 +98,7 @@ public class shop extends javax.swing.JPanel {
             }
             
             s.close();
+            rs.close();
         }
         catch (SQLException e){
             
@@ -91,7 +109,10 @@ public class shop extends javax.swing.JPanel {
         try {
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = db.mycon().createStatement();
+//            conn = comboPooledDataSource.getConnection();
+//            Statement s  = conn.createStatement();
+            
+            Statement s  = dbcp.poolCon().createStatement();
             ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM Products");
 
             
@@ -108,6 +129,7 @@ public class shop extends javax.swing.JPanel {
 
             
             s.close();
+            rs.close();
             
         }
         catch (Exception e){
@@ -379,7 +401,10 @@ public class shop extends javax.swing.JPanel {
         jLabel2.setText(jTable1.getValueAt(r, 2).toString());
         jLabel7.setText(jTable1.getValueAt(r, 3).toString());
         try {
-            Statement s  = db.mycon().createStatement();
+//            conn = comboPooledDataSource.getConnection();
+//            Statement s  = conn.createStatement();
+            
+            Statement s  = dbcp.poolCon().createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM `Products` WHERE product_id="+jTable1.getValueAt(r, 0));
             File theFile = new File("temp.png");
             output = new FileOutputStream(theFile);
@@ -410,6 +435,7 @@ public class shop extends javax.swing.JPanel {
             }
             
             s.close();
+            rs.close();
             
             
         }
@@ -425,7 +451,10 @@ public class shop extends javax.swing.JPanel {
             try {
                 DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
                 dt.setRowCount(0);
-                Statement s  = db.mycon().createStatement();
+//              conn = comboPooledDataSource.getConnection();
+//              Statement s  = conn.createStatement();
+            
+                Statement s  = dbcp.poolCon().createStatement();
                 ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products` WHERE product_category ='"+category+"'");
 
                 while(rs.next()){
@@ -440,6 +469,7 @@ public class shop extends javax.swing.JPanel {
             }
                 
             s.close();
+            rs.close();
             }
             
 
@@ -450,7 +480,10 @@ public class shop extends javax.swing.JPanel {
             try {
                 DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
                 dt.setRowCount(0);
-                Statement s  = db.mycon().createStatement();
+//              conn = comboPooledDataSource.getConnection();
+//              Statement s  = conn.createStatement();
+            
+                Statement s  = dbcp.poolCon().createStatement();
                 ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products`");
 
                 while(rs.next()){
@@ -465,6 +498,7 @@ public class shop extends javax.swing.JPanel {
             }
 
             s.close();
+            rs.close();
             }
 
             catch (Exception e){
@@ -483,17 +517,17 @@ public class shop extends javax.swing.JPanel {
 //        cos.add(new CosDeCumparaturi(cacat, double1, cechet, double2));
         
         try {
-             Statement s = (Statement) db.mycon().createStatement();
-             s.executeUpdate(" INSERT INTO cos_cumparaturi (id, id_user, id_produs, cantitate) VALUES (DEFAULT,'"+userid+"', '"+pid+"', '"+qty+"')");
+//            conn = comboPooledDataSource.getConnection();
+//            Statement s  = conn.createStatement();
+            
+            Statement s  = dbcp.poolCon().createStatement();
+            s.executeUpdate(" INSERT INTO cos_cumparaturi (id, id_user, id_produs, cantitate) VALUES (DEFAULT,'"+userid+"', '"+pid+"', '"+qty+"')");
             
         }
         catch (Exception e) {
             
         }
     
-        for (CosDeCumparaturi cos1 : cos){
-            System.out.println(cos1.toString());
-        }
         
         
     }//GEN-LAST:event_jButton1ActionPerformed

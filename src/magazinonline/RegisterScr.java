@@ -258,9 +258,10 @@ public class RegisterScr extends javax.swing.JFrame {
         int lvl = 0;
         try{
             if ( (email.endsWith(".com") || email.endsWith(".ro")) && user.length()>5 && pw.length()>5 && address.length()>10 && phone.length()>=10 && phone.length()<14){
-                Statement s = (Statement) db.mycon().createStatement();
+                Statement s  = dbcp.poolCon().createStatement();
                 s.executeUpdate(" INSERT INTO Users (user_name,user_pass,user_lvl,user_mail,user_address,user_phone) VALUES ('"+user+"','"+pw+"','"+lvl+"','"+email+"','"+address+"','"+phone+"')");
                 dispose();
+                s.close();
                 java.awt.EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -277,6 +278,7 @@ public class RegisterScr extends javax.swing.JFrame {
         } catch (Exception e){
             System.out.println(e);
         }
+        
        //new Magazin(user).setVisible(true);
      
     }//GEN-LAST:event_jButton1ActionPerformed

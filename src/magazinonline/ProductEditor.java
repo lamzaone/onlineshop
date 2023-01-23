@@ -363,8 +363,9 @@ public class ProductEditor extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int q = Integer.parseInt(uppid.getText());
         try {
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s = (Statement) dbcp.poolCon().createStatement();
             s.executeUpdate(" UPDATE Products SET product_category='"+upcategory.getText()+"', product_name='"+upname.getText()+"', product_price='"+upprice.getText()+"', product_description='"+updescription.getText()+"' WHERE product_id='"+q+"'");
+            s.close();
         }
         catch (Exception e){
             
@@ -378,8 +379,9 @@ public class ProductEditor extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int q = Integer.parseInt(uppid.getText());
         try {
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s = (Statement) dbcp.poolCon().createStatement();
             s.executeUpdate("DELETE FROM Products WHERE product_id='"+q+"'");
+            s.close();
             JOptionPane.showMessageDialog(null, "Produsul a fost eliminat din baza de date.", "SUCCES!", JOptionPane.INFORMATION_MESSAGE);
         }
         catch (Exception e){
@@ -415,10 +417,11 @@ public class ProductEditor extends javax.swing.JPanel {
             description = adddesc.getText();
             
             fis = new FileInputStream(path);
-            PreparedStatement ps  = db.mycon().prepareStatement("INSERT INTO Products (product_id, product_category, product_name, product_price, product_description, product_picture) VALUES "
+            PreparedStatement ps  = dbcp.poolCon().prepareStatement("INSERT INTO Products (product_id, product_category, product_name, product_price, product_description, product_picture) VALUES "
                     + "(DEFAULT, '"+category+"', '"+name+"', '"+price+"', '"+description+"', ?)");
             ps.setBinaryStream(1, fis);
             ps.executeUpdate();
+            ps.close();
             JOptionPane.showMessageDialog(null, "Produs adaugat cu succes!", "", JOptionPane.INFORMATION_MESSAGE);
         }
         catch (Exception e){
@@ -439,7 +442,7 @@ public class ProductEditor extends javax.swing.JPanel {
         FileOutputStream output;
         int q = Integer.parseInt(uppid.getText());
         try {
-            Statement s  = db.mycon().createStatement();
+            Statement s  = dbcp.poolCon().createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM `Products` WHERE product_id="+q);
             File theFile2 = new File("temp2.png");
             output = new FileOutputStream(theFile2);
@@ -461,6 +464,8 @@ public class ProductEditor extends javax.swing.JPanel {
             Image newImg = img.getScaledInstance(uppicture.getWidth(), uppicture.getHeight(), SCALE_SMOOTH);
             ImageIcon image = new ImageIcon(newImg);
             uppicture.setIcon(image);
+        s.close();
+        rs.close();
         }
         else {
             JOptionPane.showMessageDialog(null, "Produs inexistent", "EROARE", JOptionPane.INFORMATION_MESSAGE);
@@ -493,9 +498,10 @@ public class ProductEditor extends javax.swing.JPanel {
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(path);
-            PreparedStatement ps  = db.mycon().prepareStatement("UPDATE Products SET product_picture = ? WHERE product_id='"+uppid.getText()+"'");
+            PreparedStatement ps  = dbcp.poolCon().prepareStatement("UPDATE Products SET product_picture = ? WHERE product_id='"+uppid.getText()+"'");
             ps.setBinaryStream(1, fis);
             ps.executeUpdate();
+            ps.close();
         }
         catch (Exception e){
             

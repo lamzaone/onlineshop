@@ -201,17 +201,19 @@ public class LoginScr extends javax.swing.JFrame {
         user = userField.getText();
         pw = pwField.getText();
         try{
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s  = dbcp.poolCon().createStatement();
             
             ResultSet rs = s.executeQuery(" SELECT * FROM `Users` where user_name = '"+user+"'");
             
             if (rs.next()){
                 if (rs.getString("user_pass").equals(pw)){
-                    new Magazin(rs.getInt("user_id"),user,rs.getString("user_lvl"), 1).setVisible(true);
+                    new Magazin(rs.getInt("user_id"),user,rs.getString("user_lvl")).setVisible(true);
                     dispose();
                 }
             }
+            
             s.close();
+            rs.close();
             
         } catch (Exception e){
             System.out.println(e);

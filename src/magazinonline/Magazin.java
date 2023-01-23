@@ -37,11 +37,11 @@ public class Magazin extends javax.swing.JFrame {
         home.setVisible(true);
     }
 
-    public Magazin(int uid,String user, String acc_lvl, int login_state) {
+    public Magazin(int uid, String user, String acc_lvl) {
         this();
         userID = uid;
         acclv = Integer.parseInt(acc_lvl);
-        loginstate = login_state;
+        loginstate = 1;
         String userEmployment;
         switch (acc_lvl) {
             case "1":
@@ -66,7 +66,7 @@ public class Magazin extends javax.swing.JFrame {
         }
         userTest.setText("["+userEmployment+"] Welcome, "+user.toUpperCase());
         
-        if (login_state == 1){
+        if (loginstate == 1){
             jLabel4.setVisible(false);
             jLabel5.setVisible(false);
             jLabel17.setVisible(true);
@@ -571,7 +571,7 @@ public class Magazin extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel17MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        shop sh = new shop();
+        shop sh = new shop(acclv,userID,loginstate);
         jpload.jPanelLoader(jPanel5, sh);
         sh.setVisible(true);
     }//GEN-LAST:event_jLabel3MouseClicked

@@ -29,7 +29,7 @@ public class account extends javax.swing.JPanel {
     
     private void load(int userid){
         try{
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s  = dbcp.poolCon().createStatement();
             ResultSet rs = s.executeQuery(" SELECT * FROM `Users` where user_id = '"+userid+"'");
             
             if (rs.next()){
@@ -37,6 +37,8 @@ public class account extends javax.swing.JPanel {
                 labeladresa.setText("Adresa: "+rs.getString("user_address"));
                 labeltelefon.setText("Telefon: "+rs.getString("user_phone"));
             }
+            s.close();
+            rs.close();
             
         } catch (Exception e){
             System.out.println(e);
