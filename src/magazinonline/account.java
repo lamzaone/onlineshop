@@ -37,8 +37,8 @@ public class account extends javax.swing.JPanel {
                 labeladresa.setText("Adresa: "+rs.getString("user_address"));
                 labeltelefon.setText("Telefon: "+rs.getString("user_phone"));
             }
-            s.close();
             rs.close();
+            s.close();
             
         } catch (Exception e){
             System.out.println(e);

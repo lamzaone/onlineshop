@@ -464,8 +464,8 @@ public class ProductEditor extends javax.swing.JPanel {
             Image newImg = img.getScaledInstance(uppicture.getWidth(), uppicture.getHeight(), SCALE_SMOOTH);
             ImageIcon image = new ImageIcon(newImg);
             uppicture.setIcon(image);
-        s.close();
         rs.close();
+        s.close();
         }
         else {
             JOptionPane.showMessageDialog(null, "Produs inexistent", "EROARE", JOptionPane.INFORMATION_MESSAGE);

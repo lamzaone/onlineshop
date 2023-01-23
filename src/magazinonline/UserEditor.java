@@ -40,8 +40,8 @@ public class UserEditor extends javax.swing.JPanel {
                 dt.addRow(v);
             
         }
-            s.close();
             rs.close();
+            s.close();
             
         }
         catch (Exception e){
@@ -371,8 +371,8 @@ public class UserEditor extends javax.swing.JPanel {
                 dt.addRow(v);
             
         }
-            s.close();
             rs.close();
+            s.close();
             
         }
         catch (Exception e){
@@ -399,8 +399,8 @@ public class UserEditor extends javax.swing.JPanel {
                 dt.addRow(v);
             
         }
-            s.close();
             rs.close();
+            s.close();
             
         }
         catch (Exception e){
@@ -425,8 +425,8 @@ public class UserEditor extends javax.swing.JPanel {
             addressField.setText(rs.getString(6));
             phoneField.setText(rs.getString(7));
         }
-            s.close();
             rs.close();
+            s.close();
     }catch (Exception e){
         
     }

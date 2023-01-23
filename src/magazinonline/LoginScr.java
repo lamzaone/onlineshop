@@ -212,8 +212,8 @@ public class LoginScr extends javax.swing.JFrame {
                 }
             }
             
-            s.close();
             rs.close();
+            s.close();
             
         } catch (Exception e){
             System.out.println(e);

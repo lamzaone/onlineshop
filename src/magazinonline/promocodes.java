@@ -41,8 +41,8 @@ public class promocodes extends javax.swing.JPanel {
             
         }
             
-            s.close();
             rs.close();
+            s.close();
             
         }
         catch (Exception e){
@@ -261,8 +261,8 @@ public class promocodes extends javax.swing.JPanel {
             jTextField2.setText(rs.getString(2));
             jTextField3.setText(rs.getString(3));
         }
-            s.close();
             rs.close();
+            s.close();
     }
     catch (Exception e){
         

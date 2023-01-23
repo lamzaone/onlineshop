@@ -276,8 +276,8 @@ public class CosCumparaturi extends javax.swing.JPanel {
             jLabel5.setText("COD PROMOTIONAL APLICAT! PRET REDUS CU "+df.format(l*(m/100))+"RON");
             JOptionPane.showMessageDialog(null, "CODUL A FOST APLICAT CU SUCCES! REDUCERE "+m+"%!", "", JOptionPane.INFORMATION_MESSAGE);
             cod++;
-            s.close();
             rs.close();
+            s.close();
         }
         else {
             

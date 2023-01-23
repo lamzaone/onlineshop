@@ -22,18 +22,18 @@ public class dbcp {
 
 	static {
 		comboPooledDataSource = new ComboPooledDataSource();
-        try {
-            comboPooledDataSource.setContextClassLoaderSource("library");
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(dbcp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            comboPooledDataSource.setContextClassLoaderSource("library");
+//        } catch (PropertyVetoException ex) {
+//            Logger.getLogger(dbcp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 		comboPooledDataSource.setJdbcUrl("jdbc:mysql://mysql-105349-0.cloudclusters.net:17481/revitdb");
 		comboPooledDataSource.setUser("admin");
 		comboPooledDataSource.setPassword("Ea3b7ArW");
-
 		comboPooledDataSource.setMinPoolSize(30);
 		comboPooledDataSource.setAcquireIncrement(30);
-		comboPooledDataSource.setMaxPoolSize(100);
+		comboPooledDataSource.setMaxPoolSize(300);
+                
 
 	}
     

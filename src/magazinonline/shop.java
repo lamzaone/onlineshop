@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -46,6 +47,7 @@ public class shop extends javax.swing.JPanel {
     int loginstate = 0;
     Connection conn = null;
     ImageIcon format;
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     /**
      * Creates new form shop
      */
@@ -97,8 +99,8 @@ public class shop extends javax.swing.JPanel {
                 jComboBox2.addItem(rs.getString("product_category"));
             }
             
-            s.close();
             rs.close();
+            s.close();
         }
         catch (SQLException e){
             
@@ -121,15 +123,15 @@ public class shop extends javax.swing.JPanel {
                 v.add(rs.getInt(1));
                 v.add(rs.getString(2));
                 v.add(rs.getString(3));
-                v.add(rs.getDouble(4));
+                v.add(df.format(rs.getDouble(4))+" RON");
                 
                 dt.addRow(v);
             }
             
 
             
-            s.close();
             rs.close();
+            s.close();
             
         }
         catch (Exception e){
@@ -229,7 +231,7 @@ public class shop extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
@@ -272,7 +274,9 @@ public class shop extends javax.swing.JPanel {
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
+        jButton1.setBackground(new java.awt.Color(255, 51, 51));
         jButton1.setText("Adauga in cos");
+        jButton1.setBorderPainted(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -318,29 +322,26 @@ public class shop extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel8))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jlavbel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)))
-                        .addGap(0, 36, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel8))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jlavbel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -412,7 +413,7 @@ public class shop extends javax.swing.JPanel {
             if(rs.next()){
                 
                 jLabel2.setText(rs.getString("product_name"));
-                jLabel7.setText(rs.getString("product_price"));
+                jLabel7.setText(rs.getString(df.format("product_price")));
                 jTextArea1.setText(rs.getString("product_description"));
                 jTextArea1.setLineWrap(true);
                 jTextArea1.setWrapStyleWord(true);
@@ -434,8 +435,8 @@ public class shop extends javax.swing.JPanel {
                 jLabel8.setText(q);
             }
             
-            s.close();
             rs.close();
+            s.close();
             
             
         }
@@ -468,8 +469,8 @@ public class shop extends javax.swing.JPanel {
 
             }
                 
-            s.close();
             rs.close();
+            s.close();
             }
             
 
@@ -497,8 +498,8 @@ public class shop extends javax.swing.JPanel {
 
             }
 
-            s.close();
             rs.close();
+            s.close();
             }
 
             catch (Exception e){
@@ -522,7 +523,7 @@ public class shop extends javax.swing.JPanel {
             
             Statement s  = dbcp.poolCon().createStatement();
             s.executeUpdate(" INSERT INTO cos_cumparaturi (id, id_user, id_produs, cantitate) VALUES (DEFAULT,'"+userid+"', '"+pid+"', '"+qty+"')");
-            
+            s.close();
         }
         catch (Exception e) {
             
