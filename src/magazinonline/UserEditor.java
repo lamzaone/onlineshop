@@ -348,7 +348,20 @@ public class UserEditor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updButtonActionPerformed
-        // TODO add your handling code here:
+        try{
+            Statement s = dbcp.poolCon().createStatement();
+            s.executeUpdate("UPDATE `Users` SET "
+                    + "`user_name`='"+userField.getText()+"',"
+                            + "`user_pass`='"+pwField.getText()+"',"
+                                    + "`user_lvl`='"+lvlField.getText()+"',"
+                                            + "`user_mail`='"+mailField.getText()+"',"
+                                                    + "`user_address`='"+addressField.getText()+"',"
+                                                            + "`user_phone`='"+phoneField.getText()+"' "
+                                                                    + "WHERE `user_id`='"+idField.getText()+"'");
+            s.close();
+        }catch (Exception e){
+            
+        }
     }//GEN-LAST:event_updButtonActionPerformed
 
     private void delButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delButtonActionPerformed

@@ -86,8 +86,10 @@ public class ProductEditor extends javax.swing.JPanel {
 
         jLabel1.setText("Product ID:");
 
+        jButton1.setBackground(new java.awt.Color(153, 153, 153));
         jButton1.setText("UPDATE");
         jButton1.setToolTipText("");
+        jButton1.setBorderPainted(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -100,8 +102,10 @@ public class ProductEditor extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(255, 102, 0));
         jButton2.setText("DELETE");
         jButton2.setToolTipText("");
+        jButton2.setBorderPainted(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -136,8 +140,10 @@ public class ProductEditor extends javax.swing.JPanel {
 
         jLabel12.setText("Picture:");
 
+        jButton3.setBackground(new java.awt.Color(153, 153, 153));
         jButton3.setText("ADD PICTURE & UPLOAD PRODUCT");
         jButton3.setToolTipText("");
+        jButton3.setBorderPainted(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -146,6 +152,7 @@ public class ProductEditor extends javax.swing.JPanel {
 
         jButton4.setText("CLEAR");
         jButton4.setToolTipText("");
+        jButton4.setBorderPainted(false);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -243,7 +250,9 @@ public class ProductEditor extends javax.swing.JPanel {
             }
         });
 
+        jButton6.setBackground(new java.awt.Color(153, 153, 153));
         jButton6.setText("UPLOAD&UPDATE PHOTO");
+        jButton6.setBorderPainted(false);
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);

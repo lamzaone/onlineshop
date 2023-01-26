@@ -7,6 +7,8 @@ package magazinonline;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -22,6 +24,9 @@ public class CosCumparaturi extends javax.swing.JPanel {
     List<CosDeCumparaturi> cos;
     int cod = 0;
     int uid;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+    LocalDateTime now = LocalDateTime.now();  
+    String data;
     private static final DecimalFormat df = new DecimalFormat("0.00");
     /**
      * Creates new form CosCumparaturi
@@ -160,7 +165,6 @@ public class CosCumparaturi extends javax.swing.JPanel {
         });
 
         jButton3.setText("ELIMINA SELECTIE");
-        jButton3.setActionCommand("ELIMINA SELECTIE");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -244,7 +248,35 @@ public class CosCumparaturi extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        data = dtf.format(now);
+        int idcomanda=0;
+        
+        try {
+            Statement s = dbcp.poolCon().createStatement();
+            System.out.println(uid);
+            System.out.println(data);
+            String prt = jLabel1.getText();
+            s.executeUpdate("INSERT INTO `comenzi`(`id`, `user_id`, `pret_total`, `data_comanda`, `data_livrare`, `data_completare`, `STATUS`) VALUES (DEFAULT, '"+uid+"', '"+prt+"', '"+data+"', DEFAULT, DEFAULT, 'IN CURS DE PROCESARE')");
+            ResultSet rs = s.executeQuery("SELECT max(id) FROM comenzi");
+            if (rs.next()){
+                idcomanda = rs.getInt(1);
+            }
+            rs.close();
+            for (CosDeCumparaturi produs: cos){
+                int ID = produs.getId();
+                int qty = produs.getQty();
+                s.executeUpdate("INSERT INTO `produse_comenzi`(`id`, `id_comanda`, `product_id`, `quantity`) VALUES (DEFAULT, '"+idcomanda+"', '"+ID+"', '"+qty+"')");
+            }
+            
+            s.executeUpdate("DELETE FROM `cos_cumparaturi` WHERE `id_user` ='"+uid+"'");
+            s.close();
+            
+        } catch (Exception e){
+            
+        }
+        
+        table_load(uid);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

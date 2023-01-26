@@ -21,6 +21,10 @@ public class LoadingScr extends javax.swing.JFrame {
         initComponents();
     }
 
+    LoadingScr(String CURRENT_VERSION) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
