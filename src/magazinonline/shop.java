@@ -5,25 +5,40 @@
 package magazinonline;
 
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import static java.awt.Image.SCALE_SMOOTH;
+import java.awt.LayoutManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author denis
  */
-public class shop extends javax.swing.JPanel {
+public final class shop extends  javax.swing.JPanel implements Runnable    {
 //    static ComboPooledDataSource comboPooledDataSource = null;
 //
 //	static {
@@ -38,29 +53,63 @@ public class shop extends javax.swing.JPanel {
 //		comboPooledDataSource.setMaxPoolSize(30);
 //
 //	}
-    
+    String pathe = System.getProperty("user.dir")+File.separator+"temp"+File.separator;
     int userid;
     double pret;
     int loginstate = 0;
     Connection conn = null;
     ImageIcon format;
+    InputStream input;
+    
+    FileOutputStream output;
+    
     private static final DecimalFormat df = new DecimalFormat("0.00");
     /**
      * Creates new form shop
      */
+    
+//    static ComboPooledDataSource comboPooledDataSource = null;
+//    Connection con;
+//	static {
+//		comboPooledDataSource = new ComboPooledDataSource();
+////        try {
+////            comboPooledDataSource.setContextClassLoaderSource("library");
+////        } catch (PropertyVetoException ex) {
+////            Logger.getLogger(dbcp.class.getName()).log(Level.SEVERE, null, ex);
+////        }
+//		comboPooledDataSource.setJdbcUrl("jdbc:mysql://mysql-105349-0.cloudclusters.net:17481/revitdb");
+//		comboPooledDataSource.setUser("admin");
+//		comboPooledDataSource.setPassword("Ea3b7ArW");
+//		comboPooledDataSource.setMinPoolSize(100);
+//		comboPooledDataSource.setAcquireIncrement(5);
+//		comboPooledDataSource.setMaxPoolSize(3000);
+//                
+//                
+//
+//	}
+        
     public shop() {
         
-        
+//        try {
+//                    con = comboPooledDataSource.getConnection();
+//                } catch (SQLException E){
+//                    
+//                    
+//	}
         initComponents();
         jSpinner1.setVisible(false);
         jButton1.setVisible(false);
         jLabel6.setVisible(false);
         jLabel8.setVisible(false);
+        //jTable1.setVisible(false);
         
-        table_load();
+        //table_load();
         category_load();
-        //newprodload();
-        jPanel4.setVisible(false);
+        newprodload();
+        
+//        jScrollPane3.setSize(new Dimension (553,463));
+        //jPanel4.setVisible(false);
+        String pathe = System.getProperty("user.dir");
 
     }
     
@@ -77,45 +126,143 @@ public class shop extends javax.swing.JPanel {
         }
         
     }
-    public void setDen(String nume){
-        String Nume = nume;
-        jLabel2.setText(Nume);
-    }
-    
-    public void newprodload(){
-        
-            List<produs_test> prods = new ArrayList<>();
-            jPanel4.setLayout(new GridLayout(0,3));
-            prods = new ArrayList<>();
-        try { 
-            Statement s = dbcp.poolCon().createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM Products");
-            
-            
-            while (rs.next()){
-                produs_test prt = new produs_test(rs.getString(3),rs.getString(4));
-                jPanel4.add(prt);
-                prods.add(prt);
-//                System.out.print("a");
-//                jprload.jProductLoader(jPanel4, prt);
-//                prt.setVisible(true);
-//                jPanel4.add(prt);
-                //jPanel4.add(prt);
+
+    public void newprodload (){
+            Thread th = new Thread() {
+
+            @Override
+            public void run() { 
+                JPanel qq = new JPanel();
+                JPanel eq = new JPanel();
+                FlowLayout fl = new FlowLayout();
+                eq.setLayout(fl);
+                qq = new JPanel();
+                qq.validate();
+                GridLayout grid = new GridLayout(0,3);
+                grid.setVgap(20);
+                grid.setHgap(20);
+                qq.setLayout(grid);
+                qq.validate();
+
+
+                    try { 
+
+                        Statement s = dbcp.con.createStatement();
+
+                        ResultSet rs = s.executeQuery("SELECT `product_id`, `product_name`, `product_price`, `product_picture` FROM Products");
+            //            }else {
+            //                rs = s.executeQuery("SELECT * FROM Products WHERE product_category ='"+category+"'");
+            //            }
+
+
+
+            //            File theFile = new File(pathe+"temp3.png");
+            //            output = new FileOutputStream(theFile);
+
+
+                        while (rs.next()){
+                            String IDpr = rs.getString("product_id");
+                            String NumePr = rs.getString("product_name");
+                            String PretPR = rs.getString("product_price");
+                            String UrlPR = rs.getString("product_picture");
+
+
+                            produs_test1 prt = new produs_test1(IDpr,NumePr,PretPR, UrlPR);
+                            prt.start();
+                            
+
+//                            Thread t1 = new Thread(prt);
+//                            t1.start();
+                            
+
+                           
+                            
+                            prt.setPreferredSize(new Dimension(148, 208));
+                            prt.validate();
+                            prt.addMouseListener(new MouseAdapter() {
+                                public void mouseClicked(MouseEvent e) {
+                                   try {
+                                    Statement s = dbcp.con.createStatement();
+                                    ResultSet rs = s.executeQuery("SELECT `product_name`, `product_description`, `product_price`, `product_picture` FROM `Products` WHERE product_id='"+prt.IDprod+"'");
+                                    File theFile = new File(pathe+prt.IDprod+".png");
+                                    
+
+
+                                    if(rs.next()){
+
+                                        jLabel2.setText(rs.getString("product_name"));   
+                                        jTextArea1.setText(rs.getString("product_description"));
+                                        jTextArea1.setLineWrap(true);
+                                        jTextArea1.setWrapStyleWord(true);
+
+            //                             try{
+            //                                URL url = new URL(rs.getString("product_picture"));
+            //                                Image image = ImageIO.read(url);
+            //                                Image imej2 = image.getScaledInstance(328, 165, SCALE_SMOOTH);
+            //                                jLabel5.setIcon(new ImageIcon(imej2));
+            //                            }catch (IOException ee){
+            //            
+            //                            }
+                                        if(!theFile.exists()){
+                                            output = new FileOutputStream(theFile);
+                                            input = rs.getBinaryStream("product_picture");
+                                            byte buffer[] = new byte[1024];
+                                            while (input.read(buffer)>0){
+                                                output.write(buffer);
+                                            }
+                                            String path = theFile.getAbsolutePath();
+                                            ImageIcon myImage = new ImageIcon(path);
+                                            Image img = myImage.getImage();
+                                            Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
+                                            ImageIcon image = new ImageIcon(newImg);
+                                            jLabel5.setIcon(image);
+                                        }else {
+                                            String path = theFile.getAbsolutePath();
+                                            ImageIcon myImage = new ImageIcon(path);
+                                            Image img = myImage.getImage();
+                                            Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
+                                            ImageIcon image = new ImageIcon(newImg);
+                                            jLabel5.setIcon(image);
+                                        }
+                                        String q;
+                                        pret = rs.getDouble("product_price");
+                                        q = String.valueOf(pret);
+                                        jLabel8.setText(df.format(pret)+" RON");             
+                                        jLabel7.setText(df.format(pret)+" RON");
+                                    }
+
+                                    rs.close();
+
+
+                                }
+                                catch(Exception ef){
+
+                                }
+                                }
+                            });
+
+                            qq.add(prt);
+                        }
+                    eq.add(qq);
+                    s.close();
+                    rs.close();
+                    
+                    
+                    jScrollPane3.getViewport().add(eq);
+            //        jScrollPane3.setSize(new Dimension (553,463));
+                    }catch (Exception e){
+
+                }
             }
+            };
             
-//            for (produs_test panelprod: prods){;
-////                jprload.jProductLoader(jPanel4, panelprod);
-////                panelprod.setVisible(true);
-////                jPanel4.add(panelprod);
-//                //panelprod.setLayout(new FlowLayout());
-//                jPanel4.add(panelprod);
-//                
-//                System.out.println("a");
-//            }
-                
-        }catch (Exception e){
-        
-    }
+            th.start();
+//        try {
+//            th.join();
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(shop.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+            
 }
     
     public void category_load(){
@@ -129,7 +276,7 @@ public class shop extends javax.swing.JPanel {
 //            conn = comboPooledDataSource.getConnection();
 //            Statement s  = conn.createStatement();
             
-            Statement s  = dbcp.poolCon().createStatement();
+            Statement s  = dbcp.con.createStatement();
 
             ResultSet rs = s.executeQuery("SELECT DISTINCT product_category FROM Products");
             
@@ -146,37 +293,37 @@ public class shop extends javax.swing.JPanel {
         }
     }
 
-    public void table_load(){
-        try {
-            DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-            dt.setRowCount(0);
-//            conn = comboPooledDataSource.getConnection();
-//            Statement s  = conn.createStatement();
-            
-            Statement s  = dbcp.poolCon().createStatement();
-            ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM Products");
-
-            
-            while(rs.next()){
-                Vector v = new Vector();
-                v.add(rs.getInt(1));
-                v.add(rs.getString(2));
-                v.add(rs.getString(3));
-                v.add(df.format(rs.getDouble(4))+" RON");
-                
-                dt.addRow(v);
-            }
-            
-
-            
-            rs.close();
-            s.close();
-            
-        }
-        catch (Exception e){
-            System.out.println(e);
-        }
-    }
+//    public void table_load(){
+//        try {
+//            DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+//            dt.setRowCount(0);
+////            conn = comboPooledDataSource.getConnection();
+////            Statement s  = conn.createStatement();
+//            
+//            Statement s  = dbcp.poolCon().createStatement();
+//            ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM Products");
+//
+//            
+//            while(rs.next()){
+//                Vector v = new Vector();
+//                v.add(rs.getInt(1));
+//                v.add(rs.getString(2));
+//                v.add(rs.getString(3));
+//                v.add(df.format(rs.getDouble(4))+" RON");
+//                
+//                dt.addRow(v);
+//            }
+//            
+//
+//            
+//            rs.close();
+//            s.close();
+//            
+//        }
+//        catch (Exception e){
+//            System.out.println(e);
+//        }
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -193,8 +340,6 @@ public class shop extends javax.swing.JPanel {
         jComboBox2 = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jlavbel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -208,7 +353,7 @@ public class shop extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -272,50 +417,8 @@ public class shop extends javax.swing.JPanel {
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
-
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "ID", "Category", "Name", "Price"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable1.setToolTipText("");
-        jTable1.setFocusable(false);
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(30);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(5);
-        }
 
         jlavbel.setText("Nume produs:");
 
@@ -378,10 +481,9 @@ public class shop extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1)
@@ -389,7 +491,7 @@ public class shop extends javax.swing.JPanel {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -402,6 +504,10 @@ public class shop extends javax.swing.JPanel {
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(14, 14, 14))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -414,9 +520,9 @@ public class shop extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -429,18 +535,8 @@ public class shop extends javax.swing.JPanel {
                 .addGap(89, 89, 89))
         );
 
-        jPanel4.setBackground(new java.awt.Color(153, 255, 255));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 535, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 17, Short.MAX_VALUE)
-        );
+        jScrollPane3.setBorder(null);
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -448,13 +544,8 @@ public class shop extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -464,135 +555,222 @@ public class shop extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        String category = String.valueOf(jComboBox2.getSelectedItem());
+        if (category.equals("ALL"))newprodload();
+        else {
+            Thread th = new Thread() {
 
+            @Override
+            public void run() { 
+            JPanel qq = new JPanel();
+            JPanel eq = new JPanel();
+            FlowLayout fl = new FlowLayout();
+            eq.setLayout(fl);
+            qq = new JPanel();
+            qq.validate();
+            GridLayout grid = new GridLayout(0,3);
+            grid.setVgap(20);
+            grid.setHgap(20);
+            qq.setLayout(grid);
+            qq.validate();
+            
+            try {
+                Statement s = dbcp.con.createStatement();
+                
+                System.out.println("qqeee");
+                ResultSet rs = s.executeQuery("SELECT * FROM Products WHERE product_category ='"+category+"'");
+                
+                System.out.println("zzz");
+                
+//            File theFile = new File(pathe+"temp3.png");
+//            output = new FileOutputStream(theFile);
+
+                System.out.println("eeee");
+
+                while (rs.next()){
+                    String IDpr = rs.getString(1);
+                    String NumePr = rs.getString(3);
+                    String PretPR = rs.getString(4);
+                    String UrlPR = rs.getString("product_picture");
+
+                    System.out.println("qqqeeerer");
+
+                    produs_test1 prt = new produs_test1(IDpr,NumePr,PretPR, UrlPR);
+                    prt.start();
+                    
+                    prt.setPreferredSize(new Dimension(148, 208));
+                    prt.validate();
+                    prt.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent e) {
+                            try {
+                                Statement s = dbcp.con.createStatement();
+                                ResultSet rs = s.executeQuery("SELECT * FROM `Products` WHERE product_id='"+prt.IDprod+"'");
+                                File theFile = new File(pathe+prt.IDprod+".png");
+                                
+
+
+                                if(rs.next()){
+
+                                    jLabel2.setText(rs.getString("product_name"));
+                                    jTextArea1.setText(rs.getString("product_description"));
+                                    jTextArea1.setLineWrap(true);
+                                    jTextArea1.setWrapStyleWord(true);
+
+
+//                                    try{
+//                                        URL url = new URL(UrlPR);
+//                                        Image imej2 = ImageIO.read(url).getScaledInstance(148, 94, SCALE_SMOOTH);
+//                                        jLabel5.setIcon(new ImageIcon(imej2));
+//                                    }catch (IOException ez){
+//
+//                                    }
+                                    if(!theFile.exists()){
+                                            output = new FileOutputStream(theFile);
+                                            input = rs.getBinaryStream("product_picture");
+                                            byte buffer[] = new byte[1024];
+                                            while (input.read(buffer)>0){
+                                                output.write(buffer);
+                                            }
+                                            String path = theFile.getAbsolutePath();
+                                            ImageIcon myImage = new ImageIcon(path);
+                                            Image img = myImage.getImage();
+                                            Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
+                                            ImageIcon image = new ImageIcon(newImg);
+                                            jLabel5.setIcon(image);
+                                        }else {
+                                            String path = theFile.getAbsolutePath();
+                                            ImageIcon myImage = new ImageIcon(path);
+                                            Image img = myImage.getImage();
+                                            Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
+                                            ImageIcon image = new ImageIcon(newImg);
+                                            jLabel5.setIcon(image);
+                                        }
+                                    pret = rs.getDouble("product_price");
+                                    String q = String.valueOf(pret);
+                                    jLabel8.setText(df.format(pret)+" RON");
+                                    jLabel7.setText(df.format(pret)+" RON");
+                                }
+
+                                rs.close();
+
+
+                            }
+                            catch(Exception ef){
+
+                            }
+                        }
+                    });
+
+                    qq.add(prt);
+                }
+                eq.add(qq);
+                s.close();
+                rs.close();
+                jScrollPane3.getViewport().add(eq);
+            }catch (Exception e){
+                
+            }
+            }
+            };
+            th.start();
+            try {
+                th.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(shop.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                               
+        }
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int r = jTable1.getSelectedRow();
-        jSpinner1.setValue(1);
-        InputStream input;
-        FileOutputStream output;
-        
-        jLabel2.setText(jTable1.getValueAt(r, 2).toString());
-        try {
-//            conn = comboPooledDataSource.getConnection();
-//            Statement s  = conn.createStatement();
-            
-            Statement s  = dbcp.poolCon().createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM `Products` WHERE product_id="+jTable1.getValueAt(r, 0));
-            File theFile = new File("temp.png");
-            output = new FileOutputStream(theFile);
-            
-            
-            if(rs.next()){
-                
-                jLabel2.setText(rs.getString("product_name"));   
-                jTextArea1.setText(rs.getString("product_description"));
-                jTextArea1.setLineWrap(true);
-                jTextArea1.setWrapStyleWord(true);
-                
-                input = rs.getBinaryStream("product_picture");
-                byte buffer[] = new byte[1024];
-                while (input.read(buffer)>0){
-                    output.write(buffer);
-                }
-                String path = theFile.getAbsolutePath();
-                ImageIcon myImage = new ImageIcon(path);
-                Image img = myImage.getImage();
-                Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
-                ImageIcon image = new ImageIcon(newImg);
-                jLabel5.setIcon(image);
-                String q;
-                pret = rs.getDouble("product_price");
-                q = String.valueOf(pret);
-                jLabel8.setText(df.format(pret)+" RON");             
-                jLabel7.setText(df.format(pret)+" RON");
-            }
-            
-            rs.close();
-            s.close();
-            
-            
-        }
-        catch(Exception e){
-            
-        }
-        
-    }//GEN-LAST:event_jTable1MouseClicked
-
     private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
-        String category = String.valueOf(jComboBox2.getSelectedItem());
-        if(category.equals("ALL") == false){
-            try {
-                DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-                dt.setRowCount(0);
-//              conn = comboPooledDataSource.getConnection();
-//              Statement s  = conn.createStatement();
-            
-                Statement s  = dbcp.poolCon().createStatement();
-                ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products` WHERE product_category ='"+category+"'");
-
-                while(rs.next()){
-                    Vector v = new Vector();
-                    v.add(rs.getInt(1));
-                    v.add(rs.getString(2));
-                    v.add(rs.getString(3));
-                    v.add(rs.getDouble(4));
-
-                    dt.addRow(v);
-
-            }
-                
-            rs.close();
-            s.close();
-            }
-            
-
-            catch (Exception e){
-
-            }
-        }else {
-            try {
-                DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-                dt.setRowCount(0);
-//              conn = comboPooledDataSource.getConnection();
-//              Statement s  = conn.createStatement();
-            
-                Statement s  = dbcp.poolCon().createStatement();
-                ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products`");
-
-                while(rs.next()){
-                    Vector v = new Vector();
-                    v.add(rs.getInt(1));
-                    v.add(rs.getString(2));
-                    v.add(rs.getString(3));
-                    v.add(rs.getDouble(4));
-
-                    dt.addRow(v);
-
-            }
-
-            rs.close();
-            s.close();
-            }
-
-            catch (Exception e){
-
-            }
-        }
+        
+        
+        
+//        if(category.equals("ALL") == false){
+//            try {
+//                DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+//                dt.setRowCount(0);
+////              conn = comboPooledDataSource.getConnection();
+////              Statement s  = conn.createStatement();
+//            
+//                Statement s  = dbcp.poolCon().createStatement();
+//                ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products` WHERE product_category ='"+category+"'");
+//
+//                while(rs.next()){
+//                    Vector v = new Vector();
+//                    v.add(rs.getInt(1));
+//                    v.add(rs.getString(2));
+//                    v.add(rs.getString(3));
+//                    v.add(rs.getDouble(4));
+//
+//                    dt.addRow(v);
+//
+//            }
+//                
+//            rs.close();
+//            s.close();
+//            }
+//            
+//
+//            catch (Exception e){
+//
+//            }
+//        }else {
+//            try {
+//                DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+//                dt.setRowCount(0);
+////              conn = comboPooledDataSource.getConnection();
+////              Statement s  = conn.createStatement();
+//            
+//                Statement s  = dbcp.poolCon().createStatement();
+//                ResultSet rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products`");
+//
+//                while(rs.next()){
+//                    Vector v = new Vector();
+//                    v.add(rs.getInt(1));
+//                    v.add(rs.getString(2));
+//                    v.add(rs.getString(3));
+//                    v.add(rs.getDouble(4));
+//
+//                    dt.addRow(v);
+//
+//            }
+//
+//            rs.close();
+//            s.close();
+//            }
+//
+//            catch (Exception e){
+//
+//            }
+//            
+//            newprodload();
+//        }
     }//GEN-LAST:event_jComboBox2ItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int r = jTable1.getSelectedRow();
+        //int r = jTable1.getSelectedRow();
         
-        int pid = Integer.parseInt(jTable1.getValueAt(r, 0).toString());
+        int pid=0;
+        
+        try {
+            Statement s = dbcp.con.createStatement();
+            ResultSet rs = s.executeQuery("SELECT `product_id` FROM Products WHERE product_name='"+jLabel2.getText()+"'");
+            
+            if(rs.next()){
+                pid = rs.getInt("product_id");
+            }
+            s.close();
+            rs.close();
+        } catch  (Exception e){
+            
+        }
         
         int qty = Integer.parseInt(jSpinner1.getValue().toString());
 //        double double2 = double1* Double.parseDouble(String.valueOf(cechet));
@@ -602,7 +780,7 @@ public class shop extends javax.swing.JPanel {
 //            conn = comboPooledDataSource.getConnection();
 //            Statement s  = conn.createStatement();
             
-            Statement s  = dbcp.poolCon().createStatement();
+            Statement s  = dbcp.con.createStatement();
             s.executeUpdate(" INSERT INTO cos_cumparaturi (id, id_user, id_produs, cantitate) VALUES (DEFAULT,'"+userid+"', '"+pid+"', '"+qty+"')");
             s.close();
         }
@@ -640,42 +818,117 @@ public class shop extends javax.swing.JPanel {
     }//GEN-LAST:event_jSpinner1StateChanged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JPanel qq = new JPanel();
+        JPanel eq = new JPanel();
+        FlowLayout fl = new FlowLayout();
+        eq.setLayout(fl);
+        qq = new JPanel();
+        qq.validate();
+        GridLayout grid = new GridLayout(0,3);
+        grid.setVgap(20);
+        grid.setHgap(20);
+        qq.setLayout(grid);
+        qq.validate();
         try {
                 String category = String.valueOf(jComboBox2.getSelectedItem());
-                DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-                dt.setRowCount(0);
-//              conn = comboPooledDataSource.getConnection();
-//              Statement s  = conn.createStatement();
+               
+                
             
-                Statement s  = dbcp.poolCon().createStatement();
+                Statement s  = dbcp.con.createStatement();
                 ResultSet rs;
                 if (category != "ALL"){
-                    rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products` WHERE product_name LIKE '%"+jTextField1.getText()+"%' and product_category = '"+category+"'");
+                    rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description,product_picture FROM `Products` WHERE product_name LIKE '%"+jTextField1.getText()+"%' and product_category = '"+category+"'");
                 }
                 else {
-                    rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description FROM `Products` WHERE product_name LIKE '%"+jTextField1.getText()+"%'");
+                    rs = s.executeQuery("SELECT product_id,product_category,product_name,product_price,product_description,product_picture FROM `Products` WHERE product_name LIKE '%"+jTextField1.getText()+"%'");
 
                 }
 
                 while(rs.next()){
-                    Vector v = new Vector();
-                    v.add(rs.getInt(1));
-                    v.add(rs.getString(2));
-                    v.add(rs.getString(3));
-                    v.add(rs.getDouble(4));
-
-                    dt.addRow(v);
-
-            }
+                String IDpr = rs.getString("product_id");
+                String NumePr = rs.getString("product_name");
+                String PretPR = rs.getString("product_price");
+                String UrlPR = rs.getString("product_picture");
                 
-            rs.close();
-            s.close();
-            }
-            
+                
+                produs_test1 prt = new produs_test1(IDpr,NumePr,PretPR, UrlPR);
+                prt.start();
+                prt.setPreferredSize(new Dimension(148, 208));
+                prt.validate();
+                prt.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                       try {
+                        Statement s = dbcp.con.createStatement();
+                        ResultSet rs = s.executeQuery("SELECT `product_name`, `product_description`, `product_price`, `product_picture` FROM `Products` WHERE product_id='"+prt.IDprod+"'");
+                                                                                File theFile = new File(pathe+prt.IDprod+".png");
+                                output = new FileOutputStream(theFile);
 
-            catch (Exception e){
 
+                                if(rs.next()){
+
+                                    jLabel2.setText(rs.getString("product_name"));
+                                    jTextArea1.setText(rs.getString("product_description"));
+                                    jTextArea1.setLineWrap(true);
+                                    jTextArea1.setWrapStyleWord(true);
+
+
+//                                    try{
+//                                        URL url = new URL(UrlPR);
+//                                        Image imej2 = ImageIO.read(url).getScaledInstance(148, 94, SCALE_SMOOTH);
+//                                        jLabel5.setIcon(new ImageIcon(imej2));
+//                                    }catch (IOException ez){
+//
+//                                    }
+                                    input = rs.getBinaryStream("product_picture");
+                                    byte buffer[] = new byte[1024];
+                                    while (input.read(buffer)>0){
+                                    output.write(buffer);
+                                    }
+                                    String path = theFile.getAbsolutePath();
+                                    ImageIcon myImage = new ImageIcon(path);
+                                    Image img = myImage.getImage();
+                                    Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
+                                    ImageIcon image = new ImageIcon(newImg);
+                                    jLabel5.setIcon(image);
+                
+//                            input = rs.getBinaryStream("product_picture");
+//                            byte buffer[] = new byte[1024];
+//                            while (input.read(buffer)>0){
+//                                output.write(buffer);
+//                            }
+//                            String path = theFile.getAbsolutePath();
+//                            ImageIcon myImage = new ImageIcon(path);
+//                            Image img = myImage.getImage();
+//                            Image newImg = img.getScaledInstance(jLabel5.getWidth(), jLabel5.getHeight(), SCALE_SMOOTH);
+//                            ImageIcon image = new ImageIcon(newImg);
+                            //jLabel5.setIcon(image);
+                            String q;
+                            pret = rs.getDouble("product_price");
+                            q = String.valueOf(pret);
+                            jLabel8.setText(df.format(pret)+" RON");             
+                            jLabel7.setText(df.format(pret)+" RON");
+                        }
+
+                        rs.close();
+
+
+                    }
+                    catch(Exception ef){
+
+                    }
+                    }
+                });
+                
+                qq.add(prt);
             }
+        eq.add(qq);
+        s.close();
+        rs.close();
+        jScrollPane3.getViewport().add(eq);
+//        jScrollPane3.setSize(new Dimension (553,463));
+        }catch (Exception e){
+        
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
@@ -695,13 +948,16 @@ public class shop extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel jlavbel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

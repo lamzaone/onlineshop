@@ -31,7 +31,7 @@ public class istoric extends javax.swing.JPanel {
                 dt.setRowCount(0);
                 DefaultTableModel dt2 = (DefaultTableModel) jTable2.getModel();
                 dt2.setRowCount(0);
-                Statement s  = dbcp.poolCon().createStatement();
+                Statement s = dbcp.con.createStatement();
                 ResultSet rs = s.executeQuery("SELECT * from `comenzi` WHERE user_id = '"+userid+"'");
             
                 while (rs.next()){
@@ -196,7 +196,7 @@ public class istoric extends javax.swing.JPanel {
                 String sid = String.valueOf(jTable1.getValueAt(r,0));
                 DefaultTableModel dt2 = (DefaultTableModel) jTable2.getModel();
                 dt2.setRowCount(0);
-                Statement s  = dbcp.poolCon().createStatement();
+                Statement s = dbcp.con.createStatement();
                 ResultSet rs = s.executeQuery("SELECT pc.* , p.product_name , p.product_price "
                         + "FROM produse_comenzi pc "
                         + "JOIN Products p on pc.product_id=p.product_id "

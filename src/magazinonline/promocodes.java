@@ -28,7 +28,7 @@ public class promocodes extends javax.swing.JPanel {
         try {
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = dbcp.poolCon().createStatement();
+            Statement s = dbcp.con.createStatement();
             ResultSet rs = s.executeQuery("SELECT id, code, value FROM promo_codes");
             
             while(rs.next()){
@@ -210,7 +210,7 @@ public class promocodes extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s = (Statement) dbcp.con.createStatement();
             s.executeUpdate("INSERT INTO promo_codes (id,code,value) VALUES (default,'"+jTextField2.getText()+"','"+jTextField3.getText()+"')");
             table_load();
             
@@ -224,7 +224,7 @@ public class promocodes extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int q = Integer.parseInt(jTextField1.getText());
         try {
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s = (Statement) dbcp.con.createStatement();
             s.executeUpdate(" UPDATE promo_codes SET code='"+jTextField2.getText()+"', value='"+jTextField3.getText()+"' WHERE id ='"+jTextField1.getText()+"'");
             s.close();
             table_load();
@@ -237,7 +237,7 @@ public class promocodes extends javax.swing.JPanel {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int q = Integer.parseInt(jTextField1.getText());
         try {
-            Statement s = (Statement) db.mycon().createStatement();
+            Statement s = (Statement) dbcp.con.createStatement();
             s.executeUpdate(" DELETE FROM promo_codes WHERE id='"+q+"'");
             
             s.close();
@@ -253,7 +253,7 @@ public class promocodes extends javax.swing.JPanel {
     int r = jTable1.getSelectedRow();
     
     try {
-        Statement s  = dbcp.poolCon().createStatement();
+        Statement s = dbcp.con.createStatement();
         ResultSet rs = s.executeQuery("SELECT * FROM promo_codes where id = '"+jTable1.getValueAt(r, 0)+"'");
         
         if (rs.next()){

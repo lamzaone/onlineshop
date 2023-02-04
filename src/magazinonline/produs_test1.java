@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
@@ -25,10 +27,11 @@ import javax.swing.text.html.ImageView;
  *
  * @author denis
  */
-public class produs_test extends javax.swing.JPanel implements Runnable {
-    
+public class produs_test1 extends javax.swing.JPanel implements Runnable {
+    String pathe = System.getProperty("user.dir")+File.separator+"temp"+File.separator;
     String IDprod;
     ImageIcon Icon;
+    Thread thread;
     InputStream input;
     FileOutputStream output;
     private static final DecimalFormat df = new DecimalFormat("0.00");
@@ -36,68 +39,20 @@ public class produs_test extends javax.swing.JPanel implements Runnable {
         /**
      * Creates new form produs_test
      */
-    public produs_test() {
+    public produs_test1() {
         initComponents();
         
     }
     
-    public produs_test(String IDprodus, String NumeProd, String pretprod, String UrlPR){
+    public produs_test1(String IDprodus, String NumeProd, String pretprod, String UrlPR){
         this();
         this.IDprod = IDprodus;
-        Thread t = new Thread() {
-
-            @Override
-            public void run() {
-                        //this.IDprod = IDprodus;
-                        jLabel3.setText("#"+IDprodus);
-                        jLabel2.setText (NumeProd);
-                        Double pret = Double.valueOf(pretprod);
-                        jLabel4.setText(df.format(pret)+" RON");
-//                        try{
-//                             URL url = new URL(UrlPR);
-//                             Image imej2 = ImageIO.read(url).getScaledInstance(148, 94, SCALE_SMOOTH);
-//                            jLabel1.setIcon(new ImageIcon(imej2));
-//                    }catch (IOException e){
-//            
-//                    }
-                    try {
-                        Statement s = dbcp.poolCon().createStatement();
-                        ResultSet rs = s.executeQuery("SELECT product_picture FROM Products WHERE product_id="+IDprod);
-                        File theFile = new File("temp4.png");
-                        output = new FileOutputStream(theFile);
-
-
-                         while (rs.next()){
-                            input = rs.getBinaryStream("product_picture");
-                            byte buffer[] = new byte[10240];
-                            while (input.read(buffer)>0){
-                            output.write(buffer);
-                            }
-                            String path = theFile.getAbsolutePath(); 
-                            ImageIcon myImage = new ImageIcon(path);
-                            Image img = myImage.getImage();
-                            Image newImg = img.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), SCALE_SMOOTH);
-                            ImageIcon image = new ImageIcon(newImg);
-                            jLabel1.setIcon(image);
-                         }
-                         rs.close();
-                         s.close();
-
-
-                    }
-                    catch (Exception e){
-
-                    }
-                }
-            };
-        
-        t.start();
-        
-
-        
-        
-        
-        
+        thread = new Thread(this);
+        jLabel2.setText (NumeProd);
+        Double pret = Double.valueOf(pretprod);
+        jLabel4.setText(df.format(pret)+" RON");
+        jLabel3.setText("#"+IDprodus);
+                        
 
         
         
@@ -122,7 +77,7 @@ public class produs_test extends javax.swing.JPanel implements Runnable {
 //        try {
 //            Statement sss = dbcp.poolCon().createStatement();
 //            ResultSet rsss = sss.executeQuery("SELECT product_picture FROM Products WHERE product_id="+IDprod);
-//            File theFile = new File("temp4.png");
+//                                    File theFile = new File("/temp/"+this.IDprod+".png");
 //            output = new FileOutputStream(theFile);
 //            
 //            
@@ -147,12 +102,79 @@ public class produs_test extends javax.swing.JPanel implements Runnable {
 //        catch (Exception e){
 //            
 //        }
+
+
         
         
 
     }
     
+    @Override
+    public void run() {
 
+//                        try{
+//                             URL url = new URL(UrlPR);
+//                             Image imej2 = ImageIO.read(url).getScaledInstance(148, 94, SCALE_SMOOTH);
+//                            jLabel1.setIcon(new ImageIcon(imej2));
+//                    }catch (IOException e){
+//            
+//                    }
+                    try {
+
+                        Statement s = dbcp.poolCon().createStatement();
+                        ResultSet rs = s.executeQuery("SELECT product_picture FROM Products WHERE product_id="+IDprod);
+                        new File(pathe).mkdirs();
+                        File theFile = new File(pathe+IDprod+".png");
+
+
+                         while (rs.next()){
+                            if(!theFile.exists()) {
+                                output = new FileOutputStream(theFile);
+                                input = rs.getBinaryStream("product_picture");
+                                byte buffer[] = new byte[10240];
+                                while (input.read(buffer)>0){
+                                output.write(buffer);
+                                }
+                                String path = theFile.getAbsolutePath(); 
+                                ImageIcon myImage = new ImageIcon(path);
+                                Image img = myImage.getImage();
+                                Image newImg = img.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), SCALE_SMOOTH);
+                                ImageIcon image = new ImageIcon(newImg);
+                                jLabel1.setIcon(image);
+                            }
+                            else {
+                                String path = theFile.getAbsolutePath(); 
+                                ImageIcon myImage = new ImageIcon(path);
+                                Image img = myImage.getImage();
+                                Image newImg = img.getScaledInstance(jLabel1.getWidth(), jLabel1.getHeight(), SCALE_SMOOTH);
+                                ImageIcon image = new ImageIcon(newImg);
+                                jLabel1.setIcon(image);
+                            }
+                         }
+                         rs.close();
+                         s.close();
+
+
+                    }
+                    catch (Exception e){
+
+                    }
+    }
+    
+    public void start() {
+        thread.start();
+        System.out.println("Se lucreaza "+IDprod+"...");
+     
+    }
+
+//    public void join() {
+//        try {
+//            System.out.println("Se lucreaza "+IDprod+"...");
+//            thread.join();
+//        }catch (Exception e){
+//        
+//        }
+//    }
 
   
 
@@ -225,8 +247,5 @@ public class produs_test extends javax.swing.JPanel implements Runnable {
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+
 }

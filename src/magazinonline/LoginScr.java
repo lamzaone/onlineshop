@@ -202,7 +202,7 @@ public class LoginScr extends javax.swing.JFrame {
         user = userField.getText();
         pw = pwField.getText();
         try{
-            Statement s  = dbcp.poolCon().createStatement();
+            Statement s = dbcp.con.createStatement();
             
             ResultSet rs = s.executeQuery(" SELECT * FROM `Users` where user_name = '"+user+"'");
             

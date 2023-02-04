@@ -47,7 +47,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
             
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = dbcp.poolCon().createStatement();
+            Statement s = dbcp.con.createStatement();
             ResultSet rs = s.executeQuery("SELECT Products.product_id,Products.product_category,Products.product_name,Products.product_price, Products.product_description, cos_cumparaturi.cantitate FROM Products JOIN cos_cumparaturi ON Products.product_id = cos_cumparaturi.id_produs WHERE cos_cumparaturi.id_user = '"+userID+"'");
             
             while(rs.next()){
@@ -150,6 +150,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
 
         jLabel4.setText("PROMO CODE:");
 
+        jButton1.setBackground(new java.awt.Color(153, 153, 153));
         jButton1.setText("PLASEAZA COMANDA");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -171,7 +172,10 @@ public class CosCumparaturi extends javax.swing.JPanel {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(255, 51, 51));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton4.setText("APLICA CODUL");
+        jButton4.setBorderPainted(false);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -252,7 +256,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
         int idcomanda=0;
         
         try {
-            Statement s = dbcp.poolCon().createStatement();
+            Statement s = dbcp.con.createStatement();
             System.out.println(uid);
             System.out.println(data);
             String prt = jLabel1.getText();
@@ -281,7 +285,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            Statement s = db.mycon().createStatement();
+            Statement s = dbcp.con.createStatement();
             s.executeUpdate("DELETE FROM `cos_cumparaturi` WHERE `id_user` ='"+uid+"'");
             s.close();
         } catch (Exception e){
@@ -296,7 +300,7 @@ public class CosCumparaturi extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
     try {
-        Statement s  = dbcp.poolCon().createStatement();
+        Statement s = dbcp.con.createStatement();
         ResultSet rs = s.executeQuery("SELECT value FROM promo_codes WHERE code = '"+jTextField1.getText()+"'");
         
         if (rs.next() && cod<1){

@@ -29,7 +29,7 @@ public class account extends javax.swing.JPanel {
     
     private void load(int userid){
         try{
-            Statement s  = dbcp.poolCon().createStatement();
+            Statement s = dbcp.con.createStatement();
             ResultSet rs = s.executeQuery(" SELECT * FROM `Users` where user_id = '"+userid+"'");
             
             if (rs.next()){

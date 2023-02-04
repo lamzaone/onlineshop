@@ -349,7 +349,7 @@ public class UserEditor extends javax.swing.JPanel {
 
     private void updButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updButtonActionPerformed
         try{
-            Statement s = dbcp.poolCon().createStatement();
+            Statement s = dbcp.con.createStatement();
             s.executeUpdate("UPDATE `Users` SET "
                     + "`user_name`='"+userField.getText()+"',"
                             + "`user_pass`='"+pwField.getText()+"',"
@@ -373,7 +373,7 @@ public class UserEditor extends javax.swing.JPanel {
     try {
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = db.mycon().createStatement();
+            Statement s  = dbcp.con.createStatement();
             ResultSet rs = s.executeQuery("SELECT user_id, user_name FROM Users where user_id='"+searchField.getText()+"'");
             
             while(rs.next()){
@@ -401,7 +401,7 @@ public class UserEditor extends javax.swing.JPanel {
     try {
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = db.mycon().createStatement();
+            Statement s  = dbcp.con.createStatement();
             ResultSet rs = s.executeQuery("SELECT user_id, user_name FROM Users where user_lvl>0");
             
             while(rs.next()){
@@ -426,7 +426,7 @@ public class UserEditor extends javax.swing.JPanel {
     
     String q = jTable1.getValueAt(r, 0).toString();
     try {
-        Statement s  = db.mycon().createStatement();
+        Statement s  = dbcp.con.createStatement();
         ResultSet rs = s.executeQuery("SELECT * FROM Users where user_id='"+q+"'");
         
         if(rs.next()){
