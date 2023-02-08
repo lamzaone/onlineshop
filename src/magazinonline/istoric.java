@@ -32,7 +32,8 @@ public class istoric extends javax.swing.JPanel {
                 DefaultTableModel dt2 = (DefaultTableModel) jTable2.getModel();
                 dt2.setRowCount(0);
                 Statement s = dbcp.con.createStatement();
-                ResultSet rs = s.executeQuery("SELECT * from `comenzi` WHERE user_id = '"+userid+"'");
+                ResultSet rs = s.executeQuery("SELECT * from `comenzi` WHERE user_id = '"+userid+"' "
+                        + "ORDER BY `STATUS`");
             
                 while (rs.next()){
                     Vector v = new Vector();

@@ -57,8 +57,6 @@ public final class shop extends  javax.swing.JPanel implements Runnable    {
     int userid;
     double pret;
     int loginstate = 0;
-    Connection conn = null;
-    ImageIcon format;
     InputStream input;
     
     FileOutputStream output;
@@ -168,11 +166,11 @@ public final class shop extends  javax.swing.JPanel implements Runnable    {
 
 
                             produs_test1 prt = new produs_test1(IDpr,NumePr,PretPR, UrlPR);
-                            prt.start();
+//                            prt.start();
                             
 
-//                            Thread t1 = new Thread(prt);
-//                            t1.start();
+                            Thread t1 = new Thread(prt);
+                            t1.start();
                             
 
                            
@@ -250,6 +248,7 @@ public final class shop extends  javax.swing.JPanel implements Runnable    {
                     
                     jScrollPane3.getViewport().add(eq);
             //        jScrollPane3.setSize(new Dimension (553,463));
+
                     }catch (Exception e){
 
                 }
@@ -257,11 +256,11 @@ public final class shop extends  javax.swing.JPanel implements Runnable    {
             };
             
             th.start();
-//        try {
-//            th.join();
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(shop.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            th.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(shop.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
 }
     
@@ -602,7 +601,9 @@ public final class shop extends  javax.swing.JPanel implements Runnable    {
                     System.out.println("qqqeeerer");
 
                     produs_test1 prt = new produs_test1(IDpr,NumePr,PretPR, UrlPR);
-                    prt.start();
+                    Thread t1 = new Thread(prt);
+                    t1.start();
+                    //prt.start();
                     
                     prt.setPreferredSize(new Dimension(148, 208));
                     prt.validate();
@@ -852,7 +853,9 @@ public final class shop extends  javax.swing.JPanel implements Runnable    {
                 
                 
                 produs_test1 prt = new produs_test1(IDpr,NumePr,PretPR, UrlPR);
-                prt.start();
+                Thread t1 = new Thread(prt);
+                t1.start();
+//                prt.start();
                 prt.setPreferredSize(new Dimension(148, 208));
                 prt.validate();
                 prt.addMouseListener(new MouseAdapter() {

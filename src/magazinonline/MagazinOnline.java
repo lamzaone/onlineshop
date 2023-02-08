@@ -40,7 +40,7 @@ public class MagazinOnline {
     
     private static final String VER_URL = "https://dl.dropboxusercontent.com/s/27wxnj7l6twdvb2/latestversion.txt";
     private static final String UPDATER_URL = "https://dl.dropboxusercontent.com/s/4b44qpwvjems5yf/Updater.jar";
-    static final String CURRENT_VERSION = "0.9.7.4 BETA";
+    static final String CURRENT_VERSION = "0.9.9.0 BETA";
     /**
      * @param args the command line arguments
      */

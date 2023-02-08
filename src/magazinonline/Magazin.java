@@ -681,7 +681,8 @@ public class Magazin extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel11MouseClicked
 
     private void jPanel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel9MouseClicked
-        Support supp = new Support();
+        String q = String.valueOf(userID);
+        Support supp = new Support(q);
         jpload.jPanelLoader(jPanel5, supp);
         supp.setVisible(true);
     }//GEN-LAST:event_jPanel9MouseClicked

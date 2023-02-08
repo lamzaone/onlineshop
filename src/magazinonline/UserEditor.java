@@ -29,7 +29,7 @@ public class UserEditor extends javax.swing.JPanel {
         try {
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             dt.setRowCount(0);
-            Statement s  = db.mycon().createStatement();
+            Statement s  = dbcp.con.createStatement();
             ResultSet rs = s.executeQuery("SELECT user_id, user_name FROM Users");
             
             while(rs.next()){

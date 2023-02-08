@@ -8,16 +8,16 @@ package magazinonline;
  *
  * @author denis
  */
-public class TestChat extends javax.swing.JPanel {
+public class TestChat1 extends javax.swing.JPanel {
 
     /**
      * Creates new form TestChat
      */
-    public TestChat() {
+    public TestChat1() {
         initComponents();
     }
 
-        public TestChat(String msg) {
+        public TestChat1(String msg) {
         this();
         jTextArea1.setText(msg);
         int prefSizeH = jTextArea1.getPreferredSize().height;
@@ -38,12 +38,12 @@ public class TestChat extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jTextArea1 = new javax.swing.JTextArea();
 
-        jPanel1.setBackground(new java.awt.Color(255, 153, 51));
+        jPanel1.setBackground(new java.awt.Color(255, 0, 0));
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("USER");
+        jLabel1.setText("ADMIN");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -75,11 +75,11 @@ public class TestChat extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(295, Short.MAX_VALUE)
-                .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(303, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

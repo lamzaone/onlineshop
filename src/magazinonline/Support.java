@@ -4,21 +4,78 @@
  */
 package magazinonline;
 
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import javax.swing.JPanel;
+import java.sql.*;
+import javax.swing.JScrollBar;
+
 /**
  *
  * @author denis
  */
 public class Support extends javax.swing.JPanel {
+    String uid;
 
     /**
      * Creates new form Support
      */
     public Support() {
         initComponents();
-        jScrollPane2.add(new TestChat());
-        TestChat tc = new TestChat();
-        jScrollPane2.getViewport().add(tc, null);
     }
+
+    public Support(String usid) {
+        this();
+        uid = usid;
+        load_msg();
+        JScrollBar verticalBar = jScrollPane2.getVerticalScrollBar();
+        verticalBar.setValue(verticalBar.getMaximum());
+    }
+    
+    public void load_msg(){
+        JPanel qq = new JPanel();
+        
+        JPanel eq = new JPanel(new FlowLayout());
+        qq.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.NORTH;
+        
+        qq.add(new TestChat1("Bine ati venit! \nPuneti-ne orice fel de intrebare, iar in scurt timp un angajat vă va răspunde!\nMultumim ca ati ales echipa RevIT!") , constraints);
+        try {
+            Statement s = dbcp.con.createStatement();
+            ResultSet rs = s.executeQuery("SELECT * FROM `Support` WHERE `user_id` = '"+uid+"'");
+            
+            
+            while(rs.next()){
+                if (rs.getInt("is_admin")!=1){
+                    qq.add(new TestChat(rs.getString("message")), constraints);
+                    constraints.gridy += 1;
+                } else {
+                    qq.add(new TestChat1(rs.getString("message")), constraints);
+                    constraints.gridy += 1;
+                }
+                
+            }
+        } catch (Exception e) {
+            
+        }
+        
+        eq.add(qq);
+        jScrollPane2.getViewport().add(eq);
+        
+        
+    }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,7 +127,7 @@ public class Support extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -82,24 +139,34 @@ public class Support extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, 0)
                 .addComponent(jScrollPane2)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+            int userid = Integer.parseInt(uid);
+            Statement s = dbcp.con.createStatement();
+            s.executeUpdate("INSERT INTO `Support`(`id`, `user_id`, `message`, `is_admin`) VALUES (DEFAULT , '"+userid+"', '"+jTextArea1.getText()+"', DEFAULT)");
+            load_msg();
+        JScrollBar verticalBar = jScrollPane2.getVerticalScrollBar();
+        verticalBar.setValue(verticalBar.getMaximum());
+        jTextArea1.setText("");
+        } catch (SQLException e){
+            
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

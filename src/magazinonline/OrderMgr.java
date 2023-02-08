@@ -4,19 +4,101 @@
  */
 package magazinonline;
 
+import java.sql.*;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import static java.time.LocalDateTime.now;
+import java.time.format.DateTimeFormatter;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author denis
  */
 public class OrderMgr extends javax.swing.JPanel {
+    String idcom;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+    LocalDateTime now = LocalDateTime.now();  
+    String data;
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * Creates new form NewJPanel
      */
     public OrderMgr() {
         initComponents();
+        table1_load();
     }
+    
+    public void table1_load(){
+        try {
+            DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+            dt.setRowCount(0);
+//            conn = comboPooledDataSource.getConnection();
+//            Statement s  = conn.createStatement();
+            
+            Statement s  = dbcp.con.createStatement();
+            ResultSet rs = s.executeQuery("SELECT c.id, u.user_name, c.STATUS "
+                    + "FROM `comenzi` c "
+                    + "JOIN `Users` u "
+                    + "ON c.user_id = u.user_id "
+                    + "ORDER BY c.STATUS");
 
+            
+            while(rs.next()){
+                Vector v = new Vector();
+                v.add(rs.getString(1));
+                v.add(rs.getString(2));
+                v.add(rs.getString(3));
+                
+                dt.addRow(v);
+            }
+            
+
+            
+            rs.close();
+            s.close();
+            
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+       
+    }
+    
+    public void table2_load(String IDcom){
+        try {
+            DefaultTableModel dt2 = (DefaultTableModel) jTable2.getModel();
+            dt2.setRowCount(0);
+//            conn = comboPooledDataSource.getConnection();
+//            Statement s  = conn.createStatement();
+            
+            Statement s  = dbcp.con.createStatement();
+            ResultSet rs = s.executeQuery("SELECT pc.* , p.product_name , p.product_price "
+                        + "FROM produse_comenzi pc "
+                        + "JOIN Products p on pc.product_id=p.product_id "
+                        + "WHERE pc.id_comanda = '"+IDcom+"'");
+                            
+                while (rs.next()){
+                    Vector v = new Vector();
+                    v.add(rs.getString(3));
+                    v.add(rs.getString(5));
+                    v.add(rs.getString(6));
+                    v.add(rs.getString(4));
+                    dt2.addRow(v);
+                }
+                rs.close();
+                s.close();
+            }
+            catch (Exception e){
+                
+            }
+            
+       
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,16 +131,37 @@ public class OrderMgr extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "USER", "STATUS"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(25);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(25);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(25);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(125);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(125);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(125);
+        }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("ID COMANDA:");
@@ -134,25 +237,24 @@ public class OrderMgr extends javax.swing.JPanel {
                         .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(124, 124, 124)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel2)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -194,16 +296,74 @@ public class OrderMgr extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        data = dtf.format(now); 
+        try {
+          
+            Statement ss  = dbcp.con.createStatement();
+            ss.executeUpdate("UPDATE `comenzi` SET `data_livrare`='"+data+"', `STATUS`='PRODUSE REDATE CURIERULUI' where `id`='"+idcom+"'");
+            table1_load();
+            
+         } catch (Exception e){
+             
+         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        data = dtf.format(now);  
+        try {
+          
+            Statement ss  = dbcp.con.createStatement();
+            ss.executeUpdate("UPDATE `comenzi` SET `data_completare`='"+data+"', `STATUS`='[FINALIZATA]' where `id`='"+idcom+"'");
+            table1_load();
+            
+         } catch (Exception e){
+             
+         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int s = jTable1.getSelectedRow();
+        String IDcom = (String) jTable1.getValueAt(s, 0);
+        
+         try {
+          
+            Statement ss  = dbcp.con.createStatement();
+            ResultSet rs = ss.executeQuery("SELECT * "
+                    + "FROM `comenzi` c "
+                    + "JOIN `Users` u "
+                    + "ON c.user_id = u.user_id "
+                    + "WHERE c.id = '"+IDcom+"'");
+            
+            if (rs.next()){
+                jLabel1.setText("ID COMANDA: #"+IDcom);
+                jLabel8.setText("DATA: "+rs.getString("c.data_comanda"));
+                jLabel3.setText("Destinatar: "+rs.getString("u.user_name"));
+                jLabel2.setText("Telefon: "+rs.getString("u.user_phone"));
+                jLabel5.setText("STATUS: "+rs.getString("c.STATUS"));
+                jLabel4.setText("E-mail: "+rs.getString("u.user_mail"));
+                jTextArea1.setText(rs.getString("u.user_address"));
+                idcom=IDcom;
+                table2_load(idcom);
+            }
+
+            
+
+            
+
+            
+            rs.close();
+            ss.close();
+            
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

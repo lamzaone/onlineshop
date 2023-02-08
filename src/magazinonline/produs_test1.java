@@ -121,10 +121,11 @@ public class produs_test1 extends javax.swing.JPanel implements Runnable {
 //                    }
                     try {
 
-                        Statement s = dbcp.poolCon().createStatement();
+                        var s = dbcp.poolCon().createStatement();
                         ResultSet rs = s.executeQuery("SELECT product_picture FROM Products WHERE product_id="+IDprod);
                         new File(pathe).mkdirs();
                         File theFile = new File(pathe+IDprod+".png");
+                        System.out.println(theFile.exists());
 
 
                          while (rs.next()){
@@ -161,11 +162,11 @@ public class produs_test1 extends javax.swing.JPanel implements Runnable {
                     }
     }
     
-    public void start() {
-        thread.start();
-        System.out.println("Se lucreaza "+IDprod+"...");
-     
-    }
+//    public void start() {
+//        thread.start();
+//        System.out.println("Se lucreaza "+IDprod+"...");
+//     
+//    }
 
 //    public void join() {
 //        try {
