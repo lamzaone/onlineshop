@@ -69,6 +69,7 @@ public class TestChat extends javax.swing.JPanel {
         jTextArea1.setRows(5);
         jTextArea1.setWrapStyleWord(true);
         jTextArea1.setBorder(null);
+        jTextArea1.setMargin(new java.awt.Insets(10, 10, 10, 10));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

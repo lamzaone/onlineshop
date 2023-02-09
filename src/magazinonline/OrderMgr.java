@@ -300,7 +300,7 @@ public class OrderMgr extends javax.swing.JPanel {
         try {
           
             Statement ss  = dbcp.con.createStatement();
-            ss.executeUpdate("UPDATE `comenzi` SET `data_livrare`='"+data+"', `STATUS`='PRODUSE REDATE CURIERULUI' where `id`='"+idcom+"'");
+            ss.executeUpdate("UPDATE `comenzi` SET `data_livrare`='"+data+"', `STATUS`='PRODUSE PREDATE CURIERULUI' where `id`='"+idcom+"'");
             table1_load();
             
          } catch (Exception e){
