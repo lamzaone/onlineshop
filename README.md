@@ -1,6 +1,6 @@
 # onlineshop
 v0.9
-My first GUI application, done in JAVA using Swing / MYSql.
+My first GUI application, done in Java using Swing / MySql.
 Shop application for automotive parts with cart,checkout,order history/status, support messages, etc
 
 The general structure of this code is really bad and I don't think I will ever refactor it, or improve anything on this.
